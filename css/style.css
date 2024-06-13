@@ -1,0 +1,100 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input,
+select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+}
+
+button[type="button"] {
+  background-color: #f44336;
+  color: white;
+}
+
+button[type="submit"]:hover,
+button[type="button"]:hover {
+  opacity: 0.8;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+a {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #0000ee;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .form-buttons {
+    flex-direction: column;
+  }
+
+  button {
+    margin-bottom: 10px;
+  }
+
+  button:last-child {
+    margin-bottom: 0;
+  }
+}
