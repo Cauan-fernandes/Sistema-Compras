@@ -1,3 +1,7 @@
+
+
+import { sendToServer } from './api.js';
+
 document.addEventListener("DOMContentLoaded", () => {
   const productList = document
     .getElementById("productList")
@@ -12,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     productList.innerHTML = "";
     products
       .filter((p) => p.active)
-      .forEach((product) => {
+      .forEach((product, index) => {
         const row = productList.insertRow();
         row.insertCell(0).textContent = product.id;
         row.insertCell(1).textContent = product.name;
@@ -36,12 +40,67 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           collectedCell.textContent = "Não";
         }
+
+        const editCell = row.insertCell(6);
+        const editButton = document.createElement("button");
+        editButton.textContent = "Editar";
+        editButton.addEventListener("click", () => {
+          editProduct(index);
+        });
+        editCell.appendChild(editButton);
+
+        const deleteCell = row.insertCell(7);
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Excluir";
+        deleteButton.addEventListener("click", () => {
+          deleteProduct(index);
+        });
+        deleteCell.appendChild(deleteButton);
       });
 
-    // Check if all products are collected to enable sendToServerButton
-    sendToServerButton.disabled = !products.every(
-      (p) => (p.purchased || 0) >= p.quantity
-    );
+    updateSendToServerButton();
+  };
+
+  const updateSendToServerButton = () => {
+    if (products.every((p) => (p.purchased || 0) >= p.quantity)) {
+      sendToServerButton.disabled = false; // Ativa o botão se todos os produtos foram coletados
+    } else {
+      sendToServerButton.disabled = true; // Desativa o botão se há produtos não coletados
+    }
+  };
+
+  window.editProduct = (index) => {
+    const product = products[index];
+    document.getElementById("produtoId").value = index;
+    document.getElementById("nomeProduto").value = product.name;
+    document.getElementById("unidade").value = product.unit;
+    document.getElementById("quantidadeNecessaria").value = product.quantity;
+    document.getElementById("quantidadeComprada").value = product.purchased || 0;
+    document.getElementById("formEditar").style.display = "block";
+  };
+
+  window.salvarProduto = () => {
+    const index = document.getElementById("produtoId").value;
+    const product = products[index];
+    product.name = document.getElementById("nomeProduto").value;
+    product.unit = document.getElementById("unidade").value;
+    product.quantity = Number(document.getElementById("quantidadeNecessaria").value);
+    product.purchased = Number(document.getElementById("quantidadeComprada").value);
+    localStorage.setItem("listaProdutos", JSON.stringify(products));
+    document.getElementById("formEditar").style.display = "none";
+    renderList();
+  };
+
+  window.cancelarEdicao = () => {
+    document.getElementById("formEditar").style.display = "none";
+  };
+
+  const deleteProduct = (index) => {
+    if (confirm("Tem certeza de que deseja excluir este produto?")) {
+      products.splice(index, 1);
+      localStorage.setItem("listaProdutos", JSON.stringify(products));
+      renderList();
+    }
   };
 
   clearListButton.addEventListener("click", () => {
@@ -54,26 +113,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  sendToServerButton.addEventListener("click", async () => {
+  sendToServerButton.addEventListener("click", () => {
     if (products.every((p) => (p.purchased || 0) >= p.quantity)) {
-      try {
-        const response = await fetch(
-          "https://jsonplaceholder.typicode.com/posts",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(shoppingList),
-          }
-        );
-        if (response.ok) {
-          localStorage.removeItem("listaCompras");
-          alert("Lista enviada com sucesso!");
-        }
-      } catch (error) {
-        alert("Erro ao enviar lista: " + error.message);
-      }
+      sendToServer(products, shoppingList); // Chama a função sendToServer com os dados corretos
     } else {
       alert("Ainda há produtos não coletados.");
     }

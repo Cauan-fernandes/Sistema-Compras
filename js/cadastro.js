@@ -13,16 +13,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const active = document.getElementById("active").checked;
 
     const newProduct = {
-      id: products.length ? Math.max(products.map((p) => p.id)) + 1 : 1,
+      id: products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1,
       name: productName,
       unit: unit,
       quantity: Number(quantity),
       barcode: barcode,
-      active: active,
+      active: active
     };
 
     products.push(newProduct);
     localStorage.setItem("listaProdutos", JSON.stringify(products));
+
     alert("Produto cadastrado com sucesso!");
     form.reset();
   });
