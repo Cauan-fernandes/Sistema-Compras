@@ -1,6 +1,4 @@
-
-
-import { sendToServer } from './api.js';
+import { sendToServer } from "./api.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const productList = document
@@ -41,15 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
           collectedCell.textContent = "Não";
         }
 
-        const editCell = row.insertCell(6);
-        const editButton = document.createElement("button");
-        editButton.textContent = "Editar";
-        editButton.addEventListener("click", () => {
-          editProduct(index);
-        });
-        editCell.appendChild(editButton);
-
-        const deleteCell = row.insertCell(7);
+        const deleteCell = row.insertCell(6);
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Excluir";
         deleteButton.addEventListener("click", () => {
@@ -67,32 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       sendToServerButton.disabled = true; // Desativa o botão se há produtos não coletados
     }
-  };
-
-  window.editProduct = (index) => {
-    const product = products[index];
-    document.getElementById("produtoId").value = index;
-    document.getElementById("nomeProduto").value = product.name;
-    document.getElementById("unidade").value = product.unit;
-    document.getElementById("quantidadeNecessaria").value = product.quantity;
-    document.getElementById("quantidadeComprada").value = product.purchased || 0;
-    document.getElementById("formEditar").style.display = "block";
-  };
-
-  window.salvarProduto = () => {
-    const index = document.getElementById("produtoId").value;
-    const product = products[index];
-    product.name = document.getElementById("nomeProduto").value;
-    product.unit = document.getElementById("unidade").value;
-    product.quantity = Number(document.getElementById("quantidadeNecessaria").value);
-    product.purchased = Number(document.getElementById("quantidadeComprada").value);
-    localStorage.setItem("listaProdutos", JSON.stringify(products));
-    document.getElementById("formEditar").style.display = "none";
-    renderList();
-  };
-
-  window.cancelarEdicao = () => {
-    document.getElementById("formEditar").style.display = "none";
   };
 
   const deleteProduct = (index) => {
